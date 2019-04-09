@@ -2,11 +2,11 @@ package ueb03;
 
 import java.util.NoSuchElementException;
 
-public class SetImpl implements Set {
+public class SetImpl<T extends Comparable> implements Set<T> {
 	class Element {
-		String val;
+		T val;
 		Element left, right;
-		Element(String v, Element l, Element r) {
+		Element(T v, Element l, Element r) {
 			val = v;
 			left = l;
 			right = r;
@@ -26,8 +26,8 @@ public class SetImpl implements Set {
 	Element root;
 
 	@Override
-	public boolean add(String s) {
-		return addElement(new Element(s, null, null));
+	public boolean add(T t) {
+		return addElement(new Element(t, null, null));
 	}
 
 	private boolean addElement(Element e) {
@@ -63,13 +63,13 @@ public class SetImpl implements Set {
 	}
 
 	@Override
-	public boolean contains(String s) {
+	public boolean contains(T t) {
 		if (root == null)
 			return false;
 
 		Element it = root;
 		while (it != null) {
-			int c = s.compareTo(it.val);
+			int c = t.compareTo(it.val);
 			if (c == 0)
 				return true;
 			else if (c < 0) {
@@ -84,22 +84,22 @@ public class SetImpl implements Set {
 	}
 
 	@Override
-	public String remove(String s) {
+	public T remove(T t) {
 		if (root == null)
 			throw new NoSuchElementException();
 
 		// Spezialfall: Root Element loeschen
-		if (root.val.equals(s))
+		if (root.val.equals(t))
 			return removeRoot();
 
 		Element it = root;
 		while (it != null) {
-			if (s.compareTo(it.val) < 0) {
-				if (it.left != null && it.left.val.equals(s))
+			if (t.compareTo(it.val) < 0) {
+				if (it.left != null && it.left.val.equals(t))
 					return removeElement(it, it.left);
 				it = it.left;
 			} else {
-				if (it.right != null && it.right.val.equals(s))
+				if (it.right != null && it.right.val.equals(t))
 					return removeElement(it, it.right);
 				it = it.right;
 			}
@@ -108,7 +108,7 @@ public class SetImpl implements Set {
 		throw new NoSuchElementException();
 	}
 
-	private String removeRoot() {
+	private T removeRoot() {
 		assert(root != null);
 
 		Element e = root;
@@ -136,7 +136,7 @@ public class SetImpl implements Set {
 	 * @param p Elternelement
 	 * @param e zu loeschendes Element
 	 */
-	private String removeElement(Element p, Element e) {
+	private T removeElement(Element p, Element e) {
 		if (e == p.left) {
 			p.left = null;  // links abgestiegen
 		} else {
